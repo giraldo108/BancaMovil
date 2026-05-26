@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956652566671",
+    "project_id": "banca-movil-2cd74",
+    "storage_bucket": "banca-movil-2cd74.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956652566671:android:58d5606ca83556913518fa",
+        "android_client_info": {
+          "package_name": "com.example.bancamovil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARSDQn-GRs9EMdvv97yKq6RFo1jDxiFJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
