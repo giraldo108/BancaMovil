@@ -28,4 +28,20 @@
     <string name="error_register_failed">Hubo un error al crear la cuenta</string>
     <string name="error_fields_empty">Por favor completa todos los campos</string>
     <string name="error_document_length">El documento debe tener al menos 6 dígitos</string>
+
+    <!--HOME-->
+    <string name="text_hello">Hola</string>
+    <string name="text_profile">Perfil</string>
+    <string name="text_available">Disponible</string>
+    <string name="btn_transfer">Transferir</string>
+    <string name="btn_history">Historial</string>
+
+    <!--TRANSFERENCIAS-->
+    <string name="transfer_title">Transferir Dinero</string>
+    <string name="label_destination_account">Cuenta destino</string>
+    <string name="label_amount">Monto</string>
+    <string name="msg_transfer_success">Transferencia realizada</string>
+    <string name="msg_insufficient_balance">Saldo insuficiente</string>
+    <string name="msg_account_not_found">Cuenta no existe</string>
+    <string name="msg_invalid_amount">Monto inválido</string>
 </resources>

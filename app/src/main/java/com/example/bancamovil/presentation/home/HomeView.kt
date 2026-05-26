@@ -99,7 +99,7 @@ fun HomeView(
         ) {
             // Botón Transferir
             Button(
-                onClick = { navController.navigate("transactions") },
+                onClick = { navController.navigate("transactions/$documento") },
                 modifier = Modifier
                     .weight(1f)
                     .height(54.dp),

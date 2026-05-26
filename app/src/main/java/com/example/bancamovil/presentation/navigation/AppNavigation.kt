@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bancamovil.presentation.login.LoginView
 import com.example.bancamovil.presentation.register.RegisterView
+import com.example.bancamovil.presentation.transfer.TransferView
+
 
 @Composable
 fun AppNavigation() {
@@ -23,6 +25,10 @@ fun AppNavigation() {
         composable("home/{documentNumber}") { backStackEntry ->
             val documentNumber = backStackEntry.arguments?.getString("documentNumber") ?: ""
             // HomeView(navController = navController, documentNumber = documentNumber)
+        }
+        composable("transactions/{documento}") { backStackEntry ->
+            val documento = backStackEntry.arguments?.getString("documento") ?: ""
+            TransferView(currentUser = documento)
         }
     }
 }
