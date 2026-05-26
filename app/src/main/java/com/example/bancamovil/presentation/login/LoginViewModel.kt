@@ -1,6 +1,7 @@
 package com.example.bancamovil.presentation.login
 
 import androidx.lifecycle.ViewModel
+import com.example.bancamovil.R
 import com.example.bancamovil.data.repository.FirebaseAuthRepositoryImpl
 import com.example.bancamovil.domain.usecase.LoginUseCase
 
@@ -11,21 +12,21 @@ class LoginViewModel(
     fun login(
         documentNumber: String,
         password: String,
-        onResult: (Boolean, String) -> Unit
+        onResult: (Boolean, Int) -> Unit
     ) {
         if (documentNumber.isBlank() || password.isBlank()) {
-            onResult(false, "Por favor completa todos los campos")
+            onResult(false, R.string.error_fields_empty)
             return
         }
         if (documentNumber.length < 6) {
-            onResult(false, "El documento debe tener al menos 6 dígitos")
+            onResult(false, R.string.error_document_length)
             return
         }
         loginUseCase(documentNumber, password) { success, _ ->
             if (success) {
-                onResult(true, "")
+                onResult(true, 0)
             } else {
-                onResult(false, "Credenciales incorrectas")
+                onResult(false, R.string.error_login_failed)
             }
         }
     }

@@ -9,33 +9,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-val Pink = Color(0xFFFF2D78)
+import com.example.bancamovil.R
+import com.example.bancamovil.presentation.login.Pink
 
 @Composable
 fun TransferView(
     currentUser: String,
     viewModel: TransferViewModel = viewModel()
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             .safeDrawingPadding()
             .padding(horizontal = 32.dp),
-
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Text(
-            text = "Transferir Dinero",
+            text = stringResource(R.string.transfer_title),
             color = Color.White,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold
@@ -43,110 +41,56 @@ fun TransferView(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Cuenta destino
+        val fieldColors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Pink,
+            unfocusedBorderColor = Color.Gray,
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            cursorColor = Pink
+        )
+
         OutlinedTextField(
             value = viewModel.accountNumber.value,
-
-            onValueChange = {
-                viewModel.onAccountChange(it)
-            },
-
-            label = {
-                Text(
-                    "Cuenta destino",
-                    color = Color.Gray
-                )
-            },
-
+            onValueChange = { viewModel.onAccountChange(it) },
+            label = { Text(stringResource(R.string.label_destination_account), color = Color.Gray) },
             singleLine = true,
-
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
-
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Pink,
-                unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Pink
-            )
+            colors = fieldColors
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Monto
         OutlinedTextField(
             value = viewModel.amount.value,
-
-            onValueChange = {
-                viewModel.onAmountChange(it)
-            },
-
-            label = {
-                Text(
-                    "Monto",
-                    color = Color.Gray
-                )
-            },
-
+            onValueChange = { viewModel.onAmountChange(it) },
+            label = { Text(stringResource(R.string.label_amount), color = Color.Gray) },
             singleLine = true,
-
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
-
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Pink,
-                unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Pink
-            )
+            colors = fieldColors
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Mensaje
-        if (viewModel.message.value.isNotEmpty()) {
-
+        if (viewModel.message.value != 0) {
             Text(
-                text = viewModel.message.value,
-                color = if (
-                    viewModel.message.value == "Transferencia realizada"
-                ) Pink else Color.Red,
-
+                text = stringResource(id = viewModel.message.value),
+                color = if (viewModel.message.value == R.string.msg_transfer_success) Pink else Color.Red,
                 fontSize = 14.sp
             )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Botón
         Button(
-            onClick = {
-
-                viewModel.transfer(currentUser)
-
-            },
-
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp),
-
+            onClick = { viewModel.transfer(currentUser) },
+            modifier = Modifier.fillMaxWidth().height(54.dp),
             shape = RoundedCornerShape(50.dp),
-
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Pink
-            )
+            colors = ButtonDefaults.buttonColors(containerColor = Pink)
         ) {
-
             Text(
-                text = "Transferir",
+                text = stringResource(R.string.btn_transfer),
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold

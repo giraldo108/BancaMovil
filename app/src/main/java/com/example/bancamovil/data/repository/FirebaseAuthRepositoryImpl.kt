@@ -1,6 +1,6 @@
 package com.example.bancamovil.data.repository
 
-import android.util.Log
+import com.example.bancamovil.R
 import com.example.bancamovil.data.datasource.FirebaseUserDataSource
 import com.example.bancamovil.domain.model.User
 import com.example.bancamovil.domain.repository.AuthRepository
@@ -12,59 +12,33 @@ class FirebaseAuthRepositoryImpl(
     override fun login(
         documentNumber: String,
         password: String,
-        onResult: (Boolean, String) -> Unit
+        onResult: (Boolean, Int) -> Unit
     ) {
-
         dataSource.getUser(documentNumber)
             .addOnSuccessListener { dataUser ->
-
-                println("FIREBASE DATA: ${dataUser.value}")
-
                 if (!dataUser.exists()) {
-                    onResult(false, "Usuario no encontrado")
+                    onResult(false, R.string.error_login_failed)
                     return@addOnSuccessListener
                 }
-
-                val dbPassword =
-                    dataUser.child("contrasena").value.toString()
-
-                println("PASSWORD FIREBASE: $dbPassword")
-                println("PASSWORD APP: $password")
-
+                val dbPassword = dataUser.child("contrasena").value.toString()
                 if (dbPassword.trim() == password.trim()) {
-
-                    onResult(true, "")
-
+                    onResult(true, 0)
                 } else {
-
-                    onResult(false, "Contraseña incorrecta")
+                    onResult(false, R.string.error_login_failed)
                 }
             }
-
-            .addOnFailureListener { e ->
-
-                println("ERROR FIREBASE: ${e.message}")
-
-                onResult(false, "Error de conexión")
+            .addOnFailureListener {
+                onResult(false, R.string.error_login_failed)
             }
     }
-    override fun register(user: User, onResult: (Boolean, String) -> Unit) {
 
+    override fun register(user: User, onResult: (Boolean, Int) -> Unit) {
         val userData = mapOf(
             "fullName" to user.fullName,
             "contrasena" to user.password
         )
-
         dataSource.saveUser(user.documentNumber, userData)
-
-            .addOnSuccessListener {
-
-                onResult(true, "Cuenta creada correctamente")
-            }
-
-            .addOnFailureListener {
-
-                onResult(false, "Error al registrar usuario")
-            }
+            .addOnSuccessListener { onResult(true, R.string.register_success_message) }
+            .addOnFailureListener { onResult(false, R.string.error_register_failed) }
     }
 }

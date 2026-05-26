@@ -10,13 +10,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
-val Pink = Color(0xFFFF2D78)
+import com.example.bancamovil.R
+import com.example.bancamovil.presentation.login.Pink
 
 @Composable
 fun HomeView(
@@ -34,7 +35,6 @@ fun HomeView(
             .background(Color.Black)
             .safeDrawingPadding()
     ) {
-
         // Header
         Row(
             modifier = Modifier
@@ -54,7 +54,7 @@ fun HomeView(
                 }
                 Spacer(modifier = Modifier.width(10.dp))
                 Column {
-                    Text(text = "Hola,", color = Color.Gray, fontSize = 13.sp)
+                    Text(stringResource(R.string.text_hello), color = Color.Gray, fontSize = 13.sp)
                     Text(
                         text = viewModel.fullName.value.ifEmpty { "Usuario" },
                         color = Color.White,
@@ -64,7 +64,7 @@ fun HomeView(
                 }
             }
             TextButton(onClick = { navController.navigate("profile") }) {
-                Text(text = "Perfil", color = Pink, fontSize = 14.sp)
+                Text(stringResource(R.string.text_profile), color = Pink, fontSize = 14.sp)
             }
         }
 
@@ -77,7 +77,7 @@ fun HomeView(
                 .padding(24.dp)
         ) {
             Column {
-                Text(text = "Disponible", color = Color.Gray, fontSize = 14.sp)
+                Text(stringResource(R.string.text_available), color = Color.Gray, fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "$ ${String.format("%,.0f", viewModel.saldo.value)}",
@@ -97,37 +97,22 @@ fun HomeView(
                 .padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Botón Transferir
             Button(
                 onClick = { navController.navigate("transactions/$documento") },
-                modifier = Modifier
-                    .weight(1f)
-                    .height(54.dp),
+                modifier = Modifier.weight(1f).height(54.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Pink)
             ) {
-                Text(
-                    text = "Transferir",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
+                Text(stringResource(R.string.btn_transfer), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
             }
 
-            // Botón Historial
             OutlinedButton(
                 onClick = { navController.navigate("historial") },
-                modifier = Modifier
-                    .weight(1f)
-                    .height(54.dp),
+                modifier = Modifier.weight(1f).height(54.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
             ) {
-                Text(
-                    text = "Historial",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text(stringResource(R.string.btn_history), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
             }
         }
     }

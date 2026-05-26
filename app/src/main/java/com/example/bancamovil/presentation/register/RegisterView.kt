@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.bancamovil.R
 import com.example.bancamovil.presentation.login.Pink
 
 @Composable
@@ -27,17 +29,16 @@ fun RegisterView(
     var documentNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-
     var showLoadingAlert by remember { mutableStateOf(false) }
     var showMessageAlert by remember { mutableStateOf(false) }
     var titleDialog by remember { mutableStateOf("") }
-    var messageDialog by remember { mutableStateOf("") }
+    var messageDialog by remember { mutableIntStateOf(0) }
 
     if (showLoadingAlert) {
         AlertDialog(
             onDismissRequest = {},
             confirmButton = {},
-            title = { Text("Cargando...", color = Color.White) },
+            title = { Text(stringResource(R.string.text_loading), color = Color.White) },
             containerColor = Color(0xFF1A1A1A)
         )
     }
@@ -47,11 +48,11 @@ fun RegisterView(
             onDismissRequest = { showMessageAlert = false },
             confirmButton = {
                 TextButton(onClick = { showMessageAlert = false }) {
-                    Text("Aceptar", color = Pink)
+                    Text(stringResource(R.string.btn_accept), color = Pink)
                 }
             },
             title = { Text(titleDialog, color = Color.White) },
-            text = { Text(messageDialog, color = Color.Gray) },
+            text = { Text(stringResource(id = messageDialog), color = Color.Gray) },
             containerColor = Color(0xFF1A1A1A)
         )
     }
@@ -65,16 +66,13 @@ fun RegisterView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-
         // Title zone
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .weight(1f)
-                .wrapContentHeight(Alignment.CenterVertically)
+            modifier = Modifier.weight(1f).wrapContentHeight(Alignment.CenterVertically)
         ) {
             Text(
-                text = "BANCAMOVIL",
+                text = stringResource(R.string.login_title),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -82,7 +80,7 @@ fun RegisterView(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Registro",
+                text = stringResource(R.string.register_title),
                 fontSize = 18.sp,
                 color = Pink,
                 fontWeight = FontWeight.SemiBold
@@ -91,74 +89,56 @@ fun RegisterView(
 
         // Form + Buttons
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 40.dp),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 40.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
+            val fieldColors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Pink,
+                unfocusedBorderColor = Color.Gray,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                cursorColor = Pink
+            )
+
             OutlinedTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
-                label = { Text("Nombre completo", color = Color.Gray) },
+                label = { Text(stringResource(R.string.label_full_name), color = Color.Gray) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Pink,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Pink
-                )
+                colors = fieldColors
             )
 
             OutlinedTextField(
                 value = documentNumber,
                 onValueChange = { documentNumber = it },
-                label = { Text("Número de documento", color = Color.Gray) },
+                label = { Text(stringResource(R.string.label_document_number), color = Color.Gray) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Pink,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Pink
-                )
+                colors = fieldColors
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña", color = Color.Gray) },
+                label = { Text(stringResource(R.string.label_password), color = Color.Gray) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Pink,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Pink
-                )
+                colors = fieldColors
             )
 
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirmar contraseña", color = Color.Gray) },
+                label = { Text(stringResource(R.string.label_confirm_password), color = Color.Gray) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Pink,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    cursorColor = Pink
-                )
+                colors = fieldColors
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -173,18 +153,11 @@ fun RegisterView(
                         showMessageAlert = true
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(54.dp),
+                modifier = Modifier.fillMaxWidth().height(54.dp),
                 shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Pink)
             ) {
-                Text(
-                    text = "Registrarse",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
+                Text(stringResource(R.string.btn_register), fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
             }
 
             Row(
@@ -192,18 +165,9 @@ fun RegisterView(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "¿Ya tienes cuenta?",
-                    color = Color.Gray,
-                    fontSize = 13.sp
-                )
+                Text(stringResource(R.string.text_already_have_account), color = Color.Gray, fontSize = 13.sp)
                 TextButton(onClick = { navController.popBackStack() }) {
-                    Text(
-                        text = "Inicia sesión",
-                        color = Pink,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
-                    )
+                    Text(stringResource(R.string.text_login_here), color = Pink, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                 }
             }
         }

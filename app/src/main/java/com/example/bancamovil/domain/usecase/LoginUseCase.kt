@@ -6,7 +6,7 @@ class LoginUseCase(private val repository: AuthRepository) {
     operator fun invoke(
         documentNumber: String,
         password: String,
-        onResult: (Boolean, String) -> Unit
+        onResult: (Boolean, Int) -> Unit
     ) {
         repository.login(documentNumber, password, onResult)
     }

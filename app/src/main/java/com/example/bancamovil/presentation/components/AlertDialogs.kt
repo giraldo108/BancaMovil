@@ -7,18 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.example.bancamovil.R
 import com.example.bancamovil.presentation.login.Pink
 
 @Composable
 fun ShowLoadingAlertDialog() {
     AlertDialog(
         onDismissRequest = { },
-        title = { Text("Cargando...", color = Color.White) },
+        title = { Text(stringResource(R.string.text_loading), color = Color.White) },
         text = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = Pink)
             }
         },
@@ -30,19 +29,19 @@ fun ShowLoadingAlertDialog() {
 @Composable
 fun ShowMessageAlertDialog(
     onConfirmation: () -> Unit,
-    dialogTitle: String,
-    dialogText: String
+    dialogTitle: Int,
+    dialogText: Int
 ) {
     AlertDialog(
         onDismissRequest = { },
-        title = { Text(text = dialogTitle, color = Color.White) },
-        text = { Text(text = dialogText, color = Color.Gray) },
+        title = { Text(stringResource(dialogTitle), color = Color.White) },
+        text = { Text(stringResource(dialogText), color = Color.Gray) },
         confirmButton = {
             Button(
                 onClick = { onConfirmation() },
                 colors = ButtonDefaults.buttonColors(containerColor = Pink)
             ) {
-                Text("Aceptar", color = Color.White)
+                Text(stringResource(R.string.btn_accept), color = Color.White)
             }
         },
         containerColor = Color(0xFF1A1A1A)

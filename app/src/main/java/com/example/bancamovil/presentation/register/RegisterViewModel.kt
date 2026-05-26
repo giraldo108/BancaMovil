@@ -15,20 +15,20 @@ class RegisterViewModel(
         documentNumber: String,
         password: String,
         confirmPassword: String,
-        onResult: (Boolean, String) -> Unit
+        onResult: (Boolean, Int) -> Unit
     ) {
         if (fullName.isBlank() || documentNumber.isBlank() ||
             password.isBlank() || confirmPassword.isBlank()
         ) {
-            onResult(false, "Por favor completa todos los campos")
+            onResult(false, R.string.error_fields_empty )
             return
         }
         if (documentNumber.length < 6) {
-            onResult(false, "El documento debe tener al menos 6 dígitos")
+            onResult(false, R.string.error_document_length)
             return
         }
         if (password != confirmPassword) {
-            onResult(false, "Las contraseñas no coinciden")
+            onResult(false, R.string.error_passwords_match)
             return
         }
         val user = User(
@@ -38,9 +38,9 @@ class RegisterViewModel(
         )
         registerUseCase(user) { success, _ ->
             if (success) {
-                onResult(true, "Cuenta creada correctamente")
+                onResult(true, R.string.register_success_message)
             } else {
-                onResult(false, "Hubo un error al crear la cuenta")
+                onResult(false, R.string.error_register_failed)
             }
         }
     }
