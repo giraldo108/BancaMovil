@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -16,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bancamovil.R
-import com.example.bancamovil.presentation.login.Pink
 
 @Composable
 fun TransferView(
@@ -26,7 +24,7 @@ fun TransferView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(MaterialTheme.colorScheme.background)
             .safeDrawingPadding()
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -34,7 +32,7 @@ fun TransferView(
     ) {
         Text(
             text = stringResource(R.string.transfer_title),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold
         )
@@ -42,17 +40,17 @@ fun TransferView(
         Spacer(modifier = Modifier.height(40.dp))
 
         val fieldColors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Pink,
-            unfocusedBorderColor = Color.Gray,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White,
-            cursorColor = Pink
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+            cursorColor = MaterialTheme.colorScheme.primary
         )
 
         OutlinedTextField(
             value = viewModel.accountNumber.value,
             onValueChange = { viewModel.onAccountChange(it) },
-            label = { Text(stringResource(R.string.label_destination_account), color = Color.Gray) },
+            label = { Text(stringResource(R.string.label_destination_account), color = MaterialTheme.colorScheme.secondary) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
@@ -64,7 +62,7 @@ fun TransferView(
         OutlinedTextField(
             value = viewModel.amount.value,
             onValueChange = { viewModel.onAmountChange(it) },
-            label = { Text(stringResource(R.string.label_amount), color = Color.Gray) },
+            label = { Text(stringResource(R.string.label_amount), color = MaterialTheme.colorScheme.secondary) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
@@ -76,7 +74,8 @@ fun TransferView(
         if (viewModel.message.value != 0) {
             Text(
                 text = stringResource(id = viewModel.message.value),
-                color = if (viewModel.message.value == R.string.msg_transfer_success) Pink else Color.Red,
+                color = if (viewModel.message.value == R.string.msg_transfer_success)
+                    MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 fontSize = 14.sp
             )
         }
@@ -87,11 +86,11 @@ fun TransferView(
             onClick = { viewModel.transfer(currentUser) },
             modifier = Modifier.fillMaxWidth().height(54.dp),
             shape = RoundedCornerShape(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Pink)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 text = stringResource(R.string.btn_transfer),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )

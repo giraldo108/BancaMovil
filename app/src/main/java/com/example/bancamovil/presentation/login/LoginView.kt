@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,8 +21,6 @@ import androidx.navigation.NavController
 import com.example.bancamovil.R
 import com.example.bancamovil.presentation.components.ShowLoadingAlertDialog
 import com.example.bancamovil.presentation.components.ShowMessageAlertDialog
-
-val Pink = Color(0xFFFF2D78)
 
 @Composable
 fun LoginView(
@@ -50,7 +47,7 @@ fun LoginView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(MaterialTheme.colorScheme.background)
             .safeDrawingPadding()
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -71,7 +68,7 @@ fun LoginView(
                 text = stringResource(R.string.login_title),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 letterSpacing = 4.sp
             )
         }
@@ -82,17 +79,17 @@ fun LoginView(
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             val fieldColors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Pink,
-                unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Pink
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                cursorColor = MaterialTheme.colorScheme.primary
             )
 
             OutlinedTextField(
                 value = documentNumber,
                 onValueChange = { documentNumber = it },
-                label = { Text(stringResource(R.string.label_document_number), color = Color.Gray) },
+                label = { Text(stringResource(R.string.label_document_number), color = MaterialTheme.colorScheme.secondary) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
@@ -102,7 +99,7 @@ fun LoginView(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text(stringResource(R.string.label_password), color = Color.Gray) },
+                label = { Text(stringResource(R.string.label_password), color = MaterialTheme.colorScheme.secondary) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -128,23 +125,28 @@ fun LoginView(
                 },
                 modifier = Modifier.fillMaxWidth().height(54.dp),
                 shape = RoundedCornerShape(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Pink)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text(stringResource(R.string.btn_login), fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                Text(
+                    stringResource(R.string.btn_login),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
 
             OutlinedButton(
                 onClick = { navController.navigate("register") },
                 modifier = Modifier.fillMaxWidth().height(54.dp),
                 shape = RoundedCornerShape(50.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onBackground)
             ) {
                 Text(stringResource(R.string.text_register), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 TextButton(onClick = { }) {
-                    Text(stringResource(R.string.by_bancamovil), color = Color.Gray, fontSize = 13.sp)
+                    Text(stringResource(R.string.by_bancamovil), color = MaterialTheme.colorScheme.secondary, fontSize = 13.sp)
                 }
             }
         }

@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.bancamovil.R
-import com.example.bancamovil.presentation.login.Pink
+import java.util.Locale
 
 @Composable
 fun HomeView(
@@ -32,7 +31,7 @@ fun HomeView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(MaterialTheme.colorScheme.background)
             .safeDrawingPadding()
     ) {
         // Header
@@ -47,24 +46,24 @@ fun HomeView(
                 Box(
                     modifier = Modifier
                         .size(42.dp)
-                        .background(Color(0xFF2A2A2A), CircleShape),
+                        .background(MaterialTheme.colorScheme.tertiary, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(text = "👤", fontSize = 20.sp)
                 }
                 Spacer(modifier = Modifier.width(10.dp))
                 Column {
-                    Text(stringResource(R.string.text_hello), color = Color.Gray, fontSize = 13.sp)
+                    Text(stringResource(R.string.text_hello), color = MaterialTheme.colorScheme.secondary, fontSize = 13.sp)
                     Text(
                         text = viewModel.fullName.value.ifEmpty { "Usuario" },
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
             TextButton(onClick = { navController.navigate("profile") }) {
-                Text(stringResource(R.string.text_profile), color = Pink, fontSize = 14.sp)
+                Text(stringResource(R.string.text_profile), color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
             }
         }
 
@@ -73,15 +72,15 @@ fun HomeView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
-                .background(Color(0xFF1A1A1A), RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
                 .padding(24.dp)
         ) {
             Column {
-                Text(stringResource(R.string.text_available), color = Color.Gray, fontSize = 14.sp)
+                Text(stringResource(R.string.text_available), color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$ ${String.format("%,.0f", viewModel.saldo.value)}",
-                    color = Color.White,
+                    text = "$ ${String.format(Locale.getDefault(), "%,.0f", viewModel.saldo.value)}",
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -101,16 +100,16 @@ fun HomeView(
                 onClick = { navController.navigate("transactions/$documento") },
                 modifier = Modifier.weight(1f).height(54.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Pink)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text(stringResource(R.string.btn_transfer), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                Text(stringResource(R.string.btn_transfer), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary)
             }
 
             OutlinedButton(
                 onClick = { navController.navigate("historial") },
                 modifier = Modifier.weight(1f).height(54.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onBackground)
             ) {
                 Text(stringResource(R.string.btn_history), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
             }
