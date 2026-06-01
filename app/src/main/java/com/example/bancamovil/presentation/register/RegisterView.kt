@@ -1,6 +1,10 @@
 package com.example.bancamovil.presentation.register
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,21 +12,29 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.bancamovil.R
+import java.io.File
 
 @Composable
 fun RegisterView(
     viewModel: RegisterViewModel = viewModel(),
     navController: NavController
 ) {
+    val context = LocalContext.current
+
     var fullName by remember { mutableStateOf("") }
     var documentNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -31,9 +43,37 @@ fun RegisterView(
     var showMessageAlert by remember { mutableStateOf(false) }
     var titleDialog by remember { mutableStateOf("") }
     var messageDialog by remember { mutableIntStateOf(0) }
+    var documentImageUri by remember { mutableStateOf<Uri?>(null) }
+    var documentUploaded by remember { mutableStateOf(false) }
 
     val successTitle = stringResource(R.string.dialog_success_title)
     val errorTitle = stringResource(R.string.dialog_error_title)
+
+    // URI temporal para la foto
+    val photoUri = remember {
+        val file = File(context.cacheDir, "documento_temp.jpg")
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            file
+        )
+    }
+
+    // Launcher de cámara
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            documentImageUri = photoUri
+        }
+    }
+
+    // Launcher de permiso de cámara
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) cameraLauncher.launch(photoUri)
+    }
 
     if (showLoadingAlert) {
         AlertDialog(
@@ -48,7 +88,10 @@ fun RegisterView(
         AlertDialog(
             onDismissRequest = { showMessageAlert = false },
             confirmButton = {
-                TextButton(onClick = { showMessageAlert = false }) {
+                TextButton(onClick = {
+                    showMessageAlert = false
+                    if (titleDialog == successTitle) navController.popBackStack()
+                }) {
                     Text(stringResource(R.string.btn_accept), color = MaterialTheme.colorScheme.primary)
                 }
             },
@@ -90,7 +133,9 @@ fun RegisterView(
 
         // Form + Buttons
         Column(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 40.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 40.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             val fieldColors = OutlinedTextFieldDefaults.colors(
@@ -142,16 +187,78 @@ fun RegisterView(
                 colors = fieldColors
             )
 
+            // Foto del documento
+            if (documentImageUri != null) {
+                AsyncImage(
+                    model = documentImageUri,
+                    contentDescription = "Documento",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .border(
+                            2.dp,
+                            if (documentUploaded) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.secondary,
+                            RoundedCornerShape(12.dp)
+                        )
+                )
+            }
+
+            // Botón tomar foto
+            OutlinedButton(
+                onClick = {
+                    permissionLauncher.launch(android.Manifest.permission.CAMERA)
+                },
+                modifier = Modifier.fillMaxWidth().height(54.dp),
+                shape = RoundedCornerShape(50.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = if (documentUploaded)
+                        MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onBackground
+                )
+            ) {
+                Text(
+                    text = if (documentImageUri == null) "Tomar foto del documento"
+                    else if (documentUploaded) "✓ Documento subido"
+                    else "Subir documento",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
             Spacer(modifier = Modifier.height(4.dp))
 
+            // Botón registrarse
             Button(
                 onClick = {
                     showLoadingAlert = true
-                    viewModel.register(fullName, documentNumber, password, confirmPassword) { success, message ->
-                        titleDialog = if (success) successTitle else errorTitle
-                        messageDialog = message
-                        showLoadingAlert = false
-                        showMessageAlert = true
+
+                    if (documentImageUri != null && !documentUploaded) {
+                        viewModel.uploadDocument(context, documentImageUri!!, documentNumber) { success, _ ->
+                            if (success) {
+                                documentUploaded = true
+                                viewModel.register(fullName, documentNumber, password, confirmPassword) { regSuccess, message ->
+                                    titleDialog = if (regSuccess) successTitle else errorTitle
+                                    messageDialog = message
+                                    showLoadingAlert = false
+                                    showMessageAlert = true
+                                }
+                            } else {
+                                titleDialog = errorTitle
+                                messageDialog = R.string.error_register_failed
+                                showLoadingAlert = false
+                                showMessageAlert = true
+                            }
+                        }
+                    } else {
+                        viewModel.register(fullName, documentNumber, password, confirmPassword) { regSuccess, message ->
+                            titleDialog = if (regSuccess) successTitle else errorTitle
+                            messageDialog = message
+                            showLoadingAlert = false
+                            showMessageAlert = true
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth().height(54.dp),
