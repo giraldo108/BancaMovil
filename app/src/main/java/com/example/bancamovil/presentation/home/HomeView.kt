@@ -62,7 +62,7 @@ fun HomeView(
                     )
                 }
             }
-            TextButton(onClick = { navController.navigate("profile") }) {
+                TextButton(onClick = { navController.navigate("profile/$documento") }) {
                 Text(stringResource(R.string.text_profile), color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
             }
         }
